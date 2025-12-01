@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHADOW SYSTEM</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#001f3f">
+    <link rel="apple-touch-icon" href="icon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- BẢNG MÀU SHADOW MONARCH --- */
+        :root {
+            --bg-dark: #050810;
+            --panel-bg: linear-gradient(160deg, #0b121e 0%, #120c1f 100%);
+            --aura-dark-blue: #001f3f; 
+            --aura-mid-blue: #003366;  
+            --aura-bright-blue: #0056b3; 
+            --aura-glow: #00a8ff;        
+            --shadow-purple: #9d4edd;
+            --text-glow: #e0e6ff;
+            --danger: #ff3333;
+            --warning: #ffcc00;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-glow);
+            font-family: 'Roboto Condensed', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url('https://i.pinimg.com/originals/2a/12/35/2a1235476602353195253531353531.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        .system-window {
+            width: 100%;
+            max-width: 500px;
+            background: var(--panel-bg);
+            border: none;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            animation: slideDown 0.8s ease-out, shadowAuraPulse 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes shadowAuraPulse {
+            0% { box-shadow: 0 0 20px var(--aura-dark-blue), 0 0 40px var(--aura-mid-blue), inset 0 0 60px rgba(0,0,0,0.9); }
+            100% { box-shadow: 0 0 50px var(--aura-dark-blue), 0 0 30px var(--aura-glow), inset 0 0 30px rgba(0,0,0,0.7); }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .header {
+            background: linear-gradient(90deg, transparent, rgba(0, 86, 179, 0.3), transparent);
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid transparent;
+            box-shadow: 0 2px 10px rgba(0, 168, 255, 0.2);
+        }
+
+        .quest-title {
+            color: #fff;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            text-shadow: 0 0 10px var(--aura-bright-blue), 0 0 20px var(--aura-glow);
+        }
+
+        .sub-title {
+            color: var(--aura-glow);
+            font-size: 0.9rem;
+            margin-top: 8px;
+            letter-spacing: 1px;
+        }
+
+        .rank-display {
+            text-align: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border-bottom: 1px solid rgba(0, 86, 179, 0.2);
+        }
+        .rank-text {
+            color: var(--warning);
+            font-weight: bold;
+            font-size: 1.3rem;
+            text-shadow: 0 0 10px var(--warning);
+        }
+
+        .content {
+            padding: 25px 20px;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+        .content::-webkit-scrollbar { width: 6px; }
+        .content::-webkit-scrollbar-track { background: #0b121e; }
+        .content::-webkit-scrollbar-thumb { background: var(--aura-bright-blue); border-radius: 3px; }
+
+        .section-title {
+            color: var(--aura-glow);
+            border-left: 4px solid var(--aura-bright-blue);
+            box-shadow: -2px 0 10px var(--aura-bright-blue);
+            padding-left: 12px;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            font-family: 'Oswald', sans-serif;
+            text-shadow: 0 0 8px var(--aura-bright-blue);
+            background: linear-gradient(90deg, rgba(0, 86, 179, 0.1), transparent);
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            background: rgba(10, 10, 30, 0.7);
+            border: 1px solid rgba(0, 86, 179, 0.3);
+            border-radius: 6px;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+        .task-item:hover {
+            background: rgba(0, 86, 179, 0.2);
+            border-color: var(--aura-glow);
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.3);
+            transform: translateX(5px);
+        }
+
+        .task-name { font-size: 1rem; letter-spacing: 0.5px; }
+        .interaction-area { display: flex; align-items: center; gap: 10px; }
+
+        button {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--aura-bright-blue);
+            color: var(--aura-bright-blue);
+            padding: 6px 12px;
+            cursor: pointer;
+            font-family: 'Roboto Condensed', sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.3s;
+            border-radius: 4px;
+        }
+        button:hover { background: var(--aura-bright-blue); color: #fff; box-shadow: 0 0 15px var(--aura-bright-blue); }
+        button:active { background: var(--aura-glow); border-color: var(--aura-glow); color: #fff; }
+        
+        button.btn-check { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.8); }
+        button.btn-check.completed {
+            background: var(--aura-bright-blue);
+            border-color: var(--aura-bright-blue);
+            color: #fff; pointer-events: none;
+            box-shadow: 0 0 15px var(--aura-bright-blue);
+        }
+
+        .progress-text { font-family: monospace; color: #8a9ab5; font-size: 0.9rem; }
+        .completed-text { color: #00ff00; text-shadow: 0 0 8px #00ff00; font-weight: bold; }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 51, 51, 0.5);
+            background: linear-gradient(to top, rgba(255, 0, 0, 0.15), transparent);
+        }
+        .warning {
+            color: var(--danger); font-size: 0.9rem; font-weight: bold;
+            animation: pulseWarning 2s infinite; text-shadow: 0 0 5px var(--danger);
+        }
+        @keyframes pulseWarning { 0% { opacity: 0.8; } 50% { opacity: 1; text-shadow: 0 0 15px red; } 100% { opacity: 0.8; } }
+
+        /* --- STYLES CHO BODY SCAN --- */
+        .scan-container {
+            width: 100%;
+            height: 250px;
+            border: 2px dashed var(--aura-glow);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .scan-preview {
+            max-width: 100%;
+            max-height: 100%;
+            display: none;
+            z-index: 1;
+        }
+        .scan-placeholder { color: #888; z-index: 0; pointer-events: none;}
+        .file-input {
+            position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 2;
+        }
+        /* Hiệu ứng tia Laser quét */
+        .laser-beam {
+            position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: var(--danger);
+            box-shadow: 0 0 10px var(--danger), 0 0 20px red;
+            z-index: 3;
+            display: none; /* Mặc định ẩn */
+        }
+        .scanning .laser-beam {
+            display: block;
+            animation: scanMove 2s linear infinite;
+        }
+        @keyframes scanMove {
+            0% { top: 0%; opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.5; }
+        }
+        .analysis-btn {
+            width: 100%; margin-top: 10px; border-color: var(--shadow-purple); color: var(--shadow-purple);
+        }
+        .analysis-btn:hover { background: var(--shadow-purple); color: #fff; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #0b121e, #1f1235);
+            border: 3px solid var(--warning); padding: 40px; z-index: 1000; text-align: center;
+            box-shadow: 0 0 50px rgba(255, 204, 0, 0.4); width: 85%; max-width: 450px; border-radius: 10px;
+        }
+        .modal h2 { color: var(--warning); margin-top: 0; font-family: 'Oswald', sans-serif; letter-spacing: 2px; }
+        .modal p { font-size: 1.1rem; line-height: 1.5; }
+        .overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); backdrop-filter: blur(5px); z-index: 999;
+        }
+        /* Modal riêng cho Analysis */
+        #analysis-modal { border-color: var(--aura-glow); box-shadow: 0 0 50px rgba(0, 168, 255, 0.4); }
+        #analysis-modal h2 { color: var(--aura-glow); }
+        .analysis-result { text-align: left; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; border: 1px solid var(--aura-mid-blue); margin-top: 15px;}
+        .analysis-bullet { color: var(--warning); font-weight: bold; margin-bottom: 5px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="system-window">
+        <div class="header">
+            <h1 class="quest-title">NHIỆM VỤ BÓNG TỐI</h1>
+            <div class="sub-title">HỆ THỐNG PHÁT TRIỂN CÁ NHÂN</div>
+        </div>
+
+        <div class="rank-display">
+            <div id="current-rank" class="rank-text">[RANK F] Kẻ Mới Thức Tỉnh</div>
+            <div style="font-size: 0.9rem; color: #8a9ab5; margin-top: 5px;">Ngày thứ: <span id="day-streak" style="color:#fff">1</span></div>
+            <div style="font-size: 0.9rem; color: #8a9ab5;">Tiến độ hôm nay: <span id="daily-progress" style="color: var(--aura-glow); font-weight: bold;">0%</span></div>
+        </div>
+
+        <div class="content">
+            <div class="section-title">I. Dinh Dưỡng & Nạp Năng Lượng</div>
+            <div class="task-item">
+                <div class="task-name">Uống Nước (6 Lít)</div>
+                <div class="interaction-area">
+                    <span id="water-count" class="progress-text">0.0/6.0 L</span>
+                    <button onclick="addWater(0.25)">+0.25L</button>
+                    <button onclick="addWater(0.5)">+0.5L</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Uống Sữa (1 Lít)</div>
+                <div class="interaction-area">
+                    <span id="milk-count" class="progress-text">0.0/1.0 L</span>
+                    <button onclick="addMilk(0.25)">+0.25L</button>
+                </div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Nước ép Cà rốt (1 ly)</div>
+                <div class="interaction-area"><button id="carrot-btn" class="btn-check" onclick="toggleTask('carrot')">THỰC HIỆN</button></div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Thực phẩm chức năng</div>
+                <div class="interaction-area">
+                    <span id="supp-count" class="progress-text">0/2</span>
+                    <button onclick="addSupp()">Nạp</button>
+                </div>
+            </div>
+
+            <div class="section-title">II. Rèn Luyện Thể Chất</div>
+            
+            <div style="background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid var(--aura-mid-blue); margin-bottom: 15px;">
+                <div style="font-weight: bold; color: var(--aura-glow); margin-bottom: 10px; text-transform: uppercase;">QUÉT TÌNH TRẠNG CƠ THỂ (DAILY SCAN)</div>
+                <div class="scan-container" id="scan-box">
+                    <div class="laser-beam"></div>
+                    <span class="scan-placeholder" id="scan-text">CHẠM ĐỂ TẢI ẢNH CƠ THỂ HÔM NAY</span>
+                    <img id="preview-img" class="scan-preview" alt="Body Preview">
+                    <input type="file" class="file-input" accept="image/*" onchange="handleImageUpload(event)">
+                </div>
+                <div id="analysis-control" style="text-align: center;">
+                    <div id="scan-status" style="color: #888; font-size: 0.9rem; margin-bottom: 5px;">Trạng thái: Đang chờ dữ liệu hình ảnh...</div>
+                </div>
+            </div>
+
+            <div class="task-item" style="flex-direction: column; align-items: flex-start; background: rgba(10, 10, 30, 0.8);">
+                <div class="task-name" style="margin-bottom:15px; font-weight:bold; color:var(--aura-glow); letter-spacing: 1px;">LỊCH TRÌNH GYM (3 Tập - 1 Nghỉ)</div>
+                <div style="width:100%; display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom: 10px;">
+                    <label style="cursor:pointer"><input type="checkbox" onchange="checkGym()" class="gym-check"> 50 Bicep</label>
+                    <label style="cursor:pointer"><input type="checkbox" onchange="checkGym()" class="gym-check"> 25 Tricep</label>
+                    <label style="cursor:pointer"><input type="checkbox" onchange="checkGym()" class="gym-check"> 50 Legs</label>
+                    <label style="cursor:pointer"><input type="checkbox" onchange="checkGym()" class="gym-check"> 25 Incline Press</label>
+                    <label style="cursor:pointer"><input type="checkbox" onchange="checkGym()" class="gym-check"> 25 Lunge</label>
+                </div>
+                <div id="gym-status" class="progress-text" style="text-align:right; width:100%; font-weight: bold;">CHƯA HOÀN THÀNH</div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Đạp xe mỗi ngày</div>
+                <button id="bike-btn" class="btn-check" onclick="toggleTask('bike')">THỰC HIỆN</button>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Chạy nước rút (T2, T4, CN)</div>
+                <button id="sprint-btn" class="btn-check" onclick="toggleTask('sprint')">THỰC HIỆN</button>
+            </div>
+
+            <div class="section-title">III. Chăm Sóc Ngoại Hình</div>
+            <div class="task-item">
+                <div class="task-name">Skincare (2 lần/ngày)</div>
+                <div class="interaction-area"><span id="skin-count" class="progress-text">0/2</span><button onclick="addSkin()">Xong</button></div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Jawline (3 lần)</div>
+                <div class="interaction-area"><span id="jaw-count" class="progress-text">0/3</span><button onclick="addJaw()">Tập</button></div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Tập mũi (3 lần)</div>
+                <div class="interaction-area"><span id="nose-count" class="progress-text">0/3</span><button onclick="addNose()">Tập</button></div>
+            </div>
+            <div class="task-item">
+                <div class="task-name">Mewing (Giữ lưỡi)</div>
+                <button id="mewing-btn" class="btn-check" onclick="toggleTask('mewing')">THỰC HIỆN</button>
+            </div>
+
+            <div class="section-title">IV. Nâng Cấp Trí Tuệ</div>
+            <div class="task-item"><div class="task-name">Học Tiếng Nhật</div><button id="jp-btn" class="btn-check" onclick="toggleTask('jp')">THỰC HIỆN</button></div>
+            <div class="task-item"><div class="task-name">Học CT Phổ Thông</div><button id="school-btn" class="btn-check" onclick="toggleTask('school')">THỰC HIỆN</button></div>
+        </div>
+
+        <div class="footer">
+            <div class="warning">CẢNH BÁO: HÌNH PHẠT SẼ ĐƯỢC ÁP DỤNG NẾU THẤT BẠI</div>
+            <br>
+            <button onclick="finishDay()" style="background: transparent; border: 2px solid var(--warning); color: var(--warning); padding: 10px 20px;">KẾT THÚC NGÀY</button>
+        </div>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="reward-modal">
+        <h2>NHIỆM VỤ HOÀN TẤT</h2>
+        <p style="color: #fff;">Bạn đã nhận được phần thưởng:</p>
+        <p id="reward-text" style="font-weight: bold; font-size: 1.4rem; color: var(--aura-glow);"></p>
+        <button onclick="closeModal()" style="background: var(--warning); color: #000; border: none; font-weight: bold; padding: 10px 20px;">CHẤP NHẬN</button>
+    </div>
+
+    <div class="modal" id="analysis-modal">
+        <h2>KẾT QUẢ QUÉT CƠ THỂ</h2>
+        <p style="color: #aaa; font-style: italic;">So sánh dữ liệu Ngày <span id="ana-start"></span> vs Ngày <span id="ana-end"></span></p>
+        <div class="analysis-result">
+            <div class="analysis-bullet">➤ HỆ CƠ BẮP:</div>
+            <div id="res-muscle" style="margin-bottom: 10px; color: #fff;">Đang phân tích...</div>
+            <div class="analysis-bullet">➤ LƯỢNG MỠ THỪA:</div>
+            <div id="res-fat" style="margin-bottom: 10px; color: #fff;">Đang phân tích...</div>
+            <div class="analysis-bullet">➤ LỜI KHUYÊN TỪ HỆ THỐNG:</div>
+            <div id="res-advice" style="color: #fff;">...</div>
+        </div>
+        <br>
+        <button onclick="closeAnalysis()" style="background: var(--aura-glow); color: #000; border: none; font-weight: bold; padding: 10px 20px;">XÁC NHẬN</button>
+    </div>
+
+    <script>
+        // --- DỮ LIỆU CẤU HÌNH ---
+        const ranks = [
+            { day: 0, title: "Kẻ Vô Danh" }, { day: 3, title: "[Rank F] Kẻ Mới Thức Tỉnh" }, { day: 7, title: "[Rank E] Tân Binh Tập Sự" },
+            { day: 10, title: "[Rank E+] Người Gác Cổng" }, { day: 14, title: "[Rank D] Chiến Binh Kiên Định" }, { day: 21, title: "[Rank C] Kiến Trúc Sư" },
+            { day: 28, title: "[Rank B] Hiệp Sĩ Kỷ Luật" }, { day: 35, title: "[Rank A] Thợ Săn Sức Bền" }, { day: 42, title: "[Rank S] Đạo Sư Thể Chất" },
+            { day: 60, title: "[Rank SS] Lãnh Chúa Sinh Mệnh" }, { day: 100, title: "[Rank EX] Thần Chủ Tái Sinh" }
+        ];
+
+        const rewards = [ "Hộp ngẫu nhiên: Skin care", "Hồi phục: Ngủ nướng 1h", "Vật phẩm: Cheat Meal", "Kỹ năng: Xem Anime", "Vàng: Mua quần áo", "Buff: Massage" ];
+
+        // --- DATABASE ADVICE (Lời khuyên giả lập) ---
+        const adviceDatabase = {
+            good: [
+                { muscle: "Độ cắt nét của cơ Bicep tăng 2%.", fat: "Mỡ dưới da vùng bụng giảm nhẹ.", adv: "Bạn đang đi đúng hướng. Hãy tăng tạ thêm 1kg vào ngày mai." },
+                { muscle: "Khối lượng cơ chân (Legs) săn chắc hơn.", fat: "Không có sự tích tụ mỡ thừa mới.", adv: "Tiếp tục duy trì chế độ ăn high-protein hiện tại." },
+                { muscle: "Cơ ngực (Chest) có dấu hiệu nở nang.", fat: "Đốt cháy mỡ ổn định.", adv: "Thử thêm bài tập Push-up kim cương để tăng rãnh ngực." }
+            ],
+            bad: [
+                { muscle: "Cơ bắp đang ở trạng thái nghỉ quá lâu.", fat: "Cảnh báo: Tích nước nhẹ ở vùng mặt.", adv: "Bạn đã bỏ bê tập luyện. Hãy chạy nước rút ngay lập tức để kích hoạt lại cơ thể!" },
+                { muscle: "Không phát hiện sự phát triển sợi cơ mới.", fat: "Mỡ bụng dưới có dấu hiệu đình trệ.", adv: "Cắt giảm tinh bột vào buổi tối và tập trung vào bài Squats." }
+            ]
+        };
+
+        // --- KHỞI TẠO DỮ LIỆU ---
+        let data = JSON.parse(localStorage.getItem('soloSystemDataApp')) || {
+            day: 1, water: 0, milk: 0, supp: 0, skin: 0, jaw: 0, nose: 0, tasks: {}, gym_parts: 0,
+            lastDate: new Date().toDateString(),
+            gymHistory: [] 
+        };
+
+        if (data.lastDate !== new Date().toDateString()) {
+            resetDailyData();
+            data.lastDate = new Date().toDateString();
+            saveData();
+        }
+
+        function saveData() { localStorage.setItem('soloSystemDataApp', JSON.stringify(data)); updateUI(); }
+        function resetDailyData() {
+            data.water = 0; data.milk = 0; data.supp = 0; data.skin = 0; data.jaw = 0; data.nose = 0; data.tasks = {}; 
+            data.gym_parts = 0;
+            document.querySelectorAll('.gym-check').forEach(el => el.checked = false);
+        }
+        function getRank(day) {
+            let t = ranks[0].title;
+            for (let r of ranks) { if (day >= r.day) t = r.title; }
+            return t;
+        }
+
+        // --- HÀM UI ---
+        function updateUI() {
+            document.getElementById('day-streak').innerText = data.day;
+            document.getElementById('current-rank').innerText = getRank(data.day);
+            document.getElementById('water-count').innerText = data.water.toFixed(2) + "/6.0 L";
+            if(data.water>=6) document.getElementById('water-count').classList.add('completed-text');
+            document.getElementById('milk-count').innerText = data.milk.toFixed(2) + "/1.0 L";
+            if(data.milk>=1) document.getElementById('milk-count').classList.add('completed-text');
+            document.getElementById('supp-count').innerText = data.supp + "/2";
+            document.getElementById('skin-count').innerText = data.skin + "/2";
+            document.getElementById('jaw-count').innerText = data.jaw + "/3";
+            document.getElementById('nose-count').innerText = data.nose + "/3";
+
+            updateBtnState('carrot-btn', data.tasks.carrot);
+            updateBtnState('bike-btn', data.tasks.bike);
+            updateBtnState('sprint-btn', data.tasks.sprint);
+            updateBtnState('mewing-btn', data.tasks.mewing);
+            updateBtnState('jp-btn', data.tasks.jp);
+            updateBtnState('school-btn', data.tasks.school);
+            
+            calculateProgress();
+            checkAnalysisAvailable(); 
+        }
+
+        function updateBtnState(id, s) {
+            const b = document.getElementById(id);
+            if(s) { b.classList.add('completed'); b.innerText = "ĐÃ XONG"; }
+            else { b.classList.remove('completed'); b.innerText = "THỰC HIỆN"; }
+        }
+
+        // --- LOGIC NHẬP LIỆU ---
+        function addWater(n) { if(data.water<6){data.water+=n; saveData();} }
+        function addMilk(n) { if(data.milk<1){data.milk+=n; saveData();} }
+        function addSupp() { if(data.supp<2){data.supp++; saveData();} }
+        function addSkin() { if(data.skin<2){data.skin++; saveData();} }
+        function addJaw() { if(data.jaw<3){data.jaw++; saveData();} }
+        function addNose() { if(data.nose<3){data.nose++; saveData();} }
+        function toggleTask(k) { data.tasks[k]=!data.tasks[k]; saveData(); }
+
+        function checkGym() {
+            const c = document.querySelectorAll('.gym-check:checked').length;
+            const s = document.getElementById('gym-status');
+            if(c===5) { s.innerText = "ĐÃ XONG"; s.classList.add('completed-text'); data.tasks.gymDone = true; }
+            else { s.innerText = c+"/5 Bài"; s.classList.remove('completed-text'); data.tasks.gymDone = false; }
+            saveData();
+        }
+
+        function calculateProgress() {
+            let p = 0;
+            if(data.water>=6) p++; if(data.milk>=1) p++; if(data.supp>=2) p++; if(data.skin>=2) p++;
+            if(data.jaw>=3) p++; if(data.nose>=3) p++; if(data.tasks.gymDone) p++; if(data.tasks.bike) p++;
+            if(data.tasks.carrot) p++; if(data.tasks.school) p++;
+            let pct = Math.floor((p/10)*100); if(pct>100) pct=100;
+            document.getElementById('daily-progress').innerText = pct+"%";
+            return pct;
+        }
+
+        // --- LOGIC ẢNH & PHÂN TÍCH ---
+        let hasUploadedImg = false;
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = document.getElementById('preview-img');
+                    img.src = e.target.result;
+                    img.style.display = 'block';
+                    document.getElementById('scan-text').style.display = 'none';
+                    document.getElementById('scan-status').innerText = "Đã nhận diện hình ảnh. Sẵn sàng quét.";
+                    document.getElementById('scan-status').style.color = "#00ff00";
+                    hasUploadedImg = true;
+                    checkAnalysisAvailable();
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function checkAnalysisAvailable() {
+            const container = document.getElementById('analysis-control');
+            if (data.day % 3 === 0 && hasUploadedImg) {
+                container.innerHTML = `<button class="analysis-btn" onclick="runAnalysis()">⚡ KÍCH HOẠT QUÉT CƠ THỂ ⚡</button>`;
+            } else if (data.day % 3 === 0 && !hasUploadedImg) {
+                container.innerHTML = `<div style="color:var(--warning)">Hãy upload ảnh để mở khóa tính năng So Sánh</div>`;
+            } else {
+                const daysLeft = 3 - (data.day % 3);
+                container.innerHTML = `<div style="color:#666">Tính năng so sánh mở khóa sau: ${daysLeft} ngày nữa</div>`;
+            }
+        }
+
+        function runAnalysis() {
+            const box = document.getElementById('scan-box');
+            box.classList.add('scanning'); 
+            
+            setTimeout(() => {
+                box.classList.remove('scanning');
+                showAnalysisResult();
+            }, 3000); 
+        }
+
+        function showAnalysisResult() {
+            const startDay = Math.max(1, data.day - 3);
+            document.getElementById('ana-start').innerText = startDay;
+            document.getElementById('ana-end').innerText = data.day;
+
+            let result;
+            if (data.tasks.gymDone) {
+                result = adviceDatabase.good[Math.floor(Math.random() * adviceDatabase.good.length)];
+            } else {
+                result = adviceDatabase.bad[Math.floor(Math.random() * adviceDatabase.bad.length)];
+            }
+
+            document.getElementById('res-muscle').innerText = result.muscle;
+            document.getElementById('res-fat').innerText = result.fat;
+            document.getElementById('res-advice').innerText = result.adv;
+
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('analysis-modal').style.display = 'block';
+        }
+
+        function closeAnalysis() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('analysis-modal').style.display = 'none';
+        }
+
+        function finishDay() {
+            const r = rewards[Math.floor(Math.random()*rewards.length)];
+            document.getElementById('reward-text').innerText = r;
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('reward-modal').style.display = 'block';
+            
+            data.gymHistory.push(data.tasks.gymDone); 
+            if(data.gymHistory.length > 10) data.gymHistory.shift(); 
+        }
+
+        function closeModal() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('reward-modal').style.display = 'none';
+            data.day++;
+            resetDailyData();
+            saveData();
+            alert("Hệ thống: Chuyển sang Ngày " + data.day);
+        }
+
+        // --- KÍCH HOẠT PWA SERVICE WORKER ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Hệ thống: Service Worker đã sẵn sàng.', reg))
+                    .catch(err => console.log('Hệ thống: Lỗi kết nối.', err));
+            });
+        }
+
+        // Init
+        updateUI();
+        document.querySelectorAll('.gym-check').forEach(el => el.checked = false);
+    </script>
+</body>
+</html>
